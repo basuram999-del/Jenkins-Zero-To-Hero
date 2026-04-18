@@ -25,13 +25,18 @@ pipeline {
       }
       steps {
         withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_AUTH_TOKEN')]) {
-          sh 'cd java-maven-sonar-argocd-helm-k8s/spring-boot-app && mvn sonar:sonar -Dsonar.login=squ_8420aa287c9c04ab36bbdadfacacb6d6c721023c -Dsonar.host.url=${SONAR_URL}'
-        }
+  sh '''
+    cd java-maven-sonar-argocd-helm-k8s/spring-boot-app
+    mvn sonar:sonar \
+    -Dsonar.login=squ_8420aa287c9c04ab36bbdadfacacb6d6c721023c \
+    -Dsonar.host.url="http://13.200.210.35:9000"
+  '''
+}
       }
     }
     stage('Build and Push Docker Image') {
       environment {
-        DOCKER_IMAGE = "abhishekf5/ultimate-cicd:${BUILD_NUMBER}"
+        DOCKER_IMAGE = "basuram999-del/ultimate-cicd:${BUILD_NUMBER}"
         // DOCKERFILE_LOCATION = "java-maven-sonar-argocd-helm-k8s/spring-boot-app/Dockerfile"
         REGISTRY_CREDENTIALS = credentials('docker-cred')
       }
